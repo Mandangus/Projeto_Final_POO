@@ -18,6 +18,7 @@ public class Contents {
 		return content;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public int getHash(String filenameSer) throws ClassNotFoundException, IOException {
 		try {
 			FileInputStream file = new FileInputStream(filenameSer);

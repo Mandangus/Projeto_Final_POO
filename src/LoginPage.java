@@ -9,7 +9,6 @@ import javax.swing.*;
 
 public class LoginPage implements ActionListener{
 	
-	
 	JFrame frame = new JFrame();
 	JButton loginButton = new JButton("Entrar");
 	JButton cadastroButton = new JButton("Cadastro");
@@ -26,11 +25,10 @@ public class LoginPage implements ActionListener{
 	String[] Comunidades;
 	
 	
-	public LoginPage(HashMap<String,Usuario> infoLogin,String[] Coms){
-		
+	public LoginPage(HashMap<String,Usuario> li,String[] Coms){
 		
 		this.Comunidades = Coms;
-		logininfo = infoLogin;
+		logininfo = li;
 		userIDLabel.setBounds(50,100,75,25);
 		userPasswordLabel.setBounds(50,150,75,25);
 		
@@ -68,7 +66,7 @@ public class LoginPage implements ActionListener{
 		if(e.getSource()==cadastroButton) {
 			frame.dispose();
 			@SuppressWarnings("unused")
-			CadastroPage c = new CadastroPage(this.Comunidades);
+			CadastroPage c = new CadastroPage(logininfo,this.Comunidades);
 		}
 		
 		if(e.getSource()==loginButton) {
@@ -76,13 +74,14 @@ public class LoginPage implements ActionListener{
 			String userID = userIDField.getText();
 			String password = String.valueOf(userPasswordField.getPassword());
 			
+			
 			if(logininfo.containsKey(password)) {
 				if(logininfo.get(password).nome.contentEquals(userID)) {
 					messageLabel.setForeground(Color.green);
 					messageLabel.setText("Login successful");
 					frame.dispose();
 					@SuppressWarnings("unused")
-					WelcomePage welcomePage = new WelcomePage(userID);
+					WelcomePage welcomePage = new WelcomePage(logininfo.get(password));
 				}
 				else {
 					messageLabel.setForeground(Color.red);

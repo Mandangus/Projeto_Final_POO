@@ -1,11 +1,16 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 
 import javax.swing.*;
 
 
 public class CadastroPage implements ActionListener {
+	
+	
+	private static HashMap<String,Usuario> logininfo = new HashMap<String,Usuario>();
+	
 	JFrame frame = new JFrame();
 	JLabel bemvindo = new JLabel();
 	
@@ -25,7 +30,6 @@ public class CadastroPage implements ActionListener {
 	
 	JButton botao = new JButton();
 	
-	String[] petStrings;
 	
 	JLabel comLabel = new JLabel("*Comunidade: ");
 	
@@ -39,12 +43,15 @@ public class CadastroPage implements ActionListener {
 	
 	JLabel warning = new JLabel("Todos os campos com * devem ser preenchidos!");
 	
-	public CadastroPage(String[] comStrings){
+	@SuppressWarnings("rawtypes")
+	public CadastroPage(HashMap<String,Usuario> info,String[] comStrings){
+		
+		logininfo = info;
 		
 		
-		this.petStrings = comStrings;
+		@SuppressWarnings("unchecked")
+		JComboBox comboStrings = new JComboBox(comStrings);
 		
-		JComboBox petList = new JComboBox(petStrings);
 		
 		bemvindo.setBounds(10,0,200,35);
 		bemvindo.setFont(new Font(null,Font.BOLD,20));
@@ -76,7 +83,7 @@ public class CadastroPage implements ActionListener {
 		userDescField.setWrapStyleWord(true);
 		userDescField.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 		
-		petList.setBounds(125,445,200,25);
+		comboStrings.setBounds(125,445,200,25);
 		comLabel.setBounds(10,445,200,25);
 		comLabel.setFont(new Font(null,Font.ITALIC,15));
 		
@@ -109,7 +116,7 @@ public class CadastroPage implements ActionListener {
 		frame.add(userInterField);
 		frame.add(userDescLabel);
 		frame.add(userDescField);
-		frame.add(petList);
+		frame.add(comboStrings);
 		frame.add(comLabel);
 		frame.add(userPasswordField);
 		frame.add(userPasswordLabel);
@@ -126,18 +133,27 @@ public class CadastroPage implements ActionListener {
 	public static void main(String[] args) {
 		String[] Coms = {"SCC021","SSC000","SMA400"};
 		@SuppressWarnings("unused")
-		CadastroPage c = new CadastroPage(Coms);
+		CadastroPage c = new CadastroPage(logininfo,Coms);
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		
+		String password = String.valueOf(userPasswordField.getPassword());
+		String password2 = String.valueOf(userConfField.getPassword());
 		if(e.getSource()==botao) {
-			if(userIDField.getText().isEmpty() || userPasswordField.getText().isEmpty() || 
-					userConfField.getText().isEmpty() || userAgeField.getText().isEmpty()) {
+			if(userIDField.getText().isEmpty() || password.isEmpty() || 
+					password2.isEmpty() || userAgeField.getText().isEmpty()) {
 				warning.setVisible(true);
-			}else if(userConfField.getText().equals(userPasswordField.getText())){
-				System.out.println("OK");
+			}else if(password.equals(password2)){
+				int idade = Integer.parseInt(userAgeField.getText());
+				Usuario cadas = new Usuario(idade,userIDField.getText(),userInterField.getText(),userDescField.getText());
+				logininfo.put(password, cadas);
+				frame.dispose();
+				@SuppressWarnings("unused")
+				WelcomePage p = new WelcomePage(cadas);
 			}
 		}
 	}
+	
+	
 }
